@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 
-const API_URL = "http://https://da-server-ltll.onrender.com";
+const API_URL = "https://da-server-ltll.onrender.com";
 
 const Payment = () => {
     const [searchParams] = useSearchParams();

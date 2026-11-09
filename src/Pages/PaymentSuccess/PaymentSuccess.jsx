@@ -28,7 +28,7 @@ const PaymentSuccess = () => {
         const confirmPayment = async () => {
             try {
                 const response = await axios.get(
-                    `http://https://da-server-ltll.onrender.com/api/payments/confirmation/${encodeURIComponent(sessionId)}`
+                    `https://da-server-ltll.onrender.com/api/payments/confirmation/${encodeURIComponent(sessionId)}`
                 );
 
                 if (!isMounted) return;

@@ -15,7 +15,7 @@ const AdminLogin = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const API_URL = import.meta.env.VITE_API_URL || "http://https://da-server-ltll.onrender.com";
+    const API_URL = import.meta.env.VITE_API_URL || "https://da-server-ltll.onrender.com";
 
     const handleChange = (e) => {
         setFormData({

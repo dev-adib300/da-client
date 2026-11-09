@@ -2,7 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const API_URL = "http://https://da-server-ltll.onrender.com";
+const API_URL = "https://da-server-ltll.onrender.com";
 
 const plans = [
     { value: "basic", name: "Basic", price: "$15", duration: "1 Month" },

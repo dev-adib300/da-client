@@ -65,7 +65,7 @@ const Registration = () => {
             setError("");
 
             const response = await axios.post(
-                "http://https://da-server-ltll.onrender.com/api/members/register",
+                "https://da-server-ltll.onrender.com/api/members/register",
                 formData
             );
 
