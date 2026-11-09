@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "http://https://da-server-ltll.onrender.com";
 
 const Card = () => {
   const { token } = useParams();

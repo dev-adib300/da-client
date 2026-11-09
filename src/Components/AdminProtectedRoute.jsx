@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 import axios from "axios";
 
 const AdminProtectedRoute = ({ children }) => {
-    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+    const API_URL = import.meta.env.VITE_API_URL || "http://https://da-server-ltll.onrender.com";
 
     const [authorized, setAuthorized] = useState(false);
     const [checking, setChecking] = useState(true);

@@ -6,7 +6,7 @@ import axios from "axios";
 const Dash = () => {
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://https://da-server-ltll.onrender.com";
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
