@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import axios from "axios";
 
@@ -16,46 +15,9 @@ const Renewal = () => {
     const [selectedPlan, setSelectedPlan] = useState("basic");
 
     const [verificationToken, setVerificationToken] = useState("");
-    const [purchase, setPurchase] = useState(null);
-
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
-
-    // Create or retry Stripe Checkout
-    const handleCheckout = async (purchaseId) => {
-        try {
-            setLoading(true);
-            setError("");
-            setSuccess("Preparing your secure payment...");
-
-            const response = await axios.post(
-                `${API_URL}/api/payments/create-checkout-session`,
-                { purchaseId }
-            );
-
-            if (
-                response.data.success &&
-                response.data.checkoutUrl
-            ) {
-                window.location.assign(response.data.checkoutUrl);
-                return;
-            }
-
-            throw new Error("Unable to create Stripe checkout session.");
-
-        } catch (err) {
-            setSuccess("");
-
-            setError(
-                err.response?.data?.message ||
-                err.message ||
-                "Unable to start payment. Please try again."
-            );
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleSendOTP = async (e) => {
         e.preventDefault();
@@ -97,6 +59,7 @@ const Renewal = () => {
 
             if (response.data.success) {
                 setVerificationToken(response.data.verificationToken);
+
                 setSuccess(
                     "Email verified successfully! Select your renewal plan."
                 );
@@ -131,23 +94,28 @@ const Renewal = () => {
             if (!response.data.success) {
                 throw new Error(
                     response.data.message ||
-                    "Unable to create renewal purchase."
+                    "Unable to complete membership renewal."
                 );
             }
 
-            // Save the purchase before attempting payment.
-            // This allows the member to retry if Stripe fails.
-            setPurchase(response.data);
-            setVerificationToken("");
+            if (response.data.cardUrl) {
+                window.location.assign(response.data.cardUrl);
+                return;
+            }
 
-            // Immediately redirect to Stripe Checkout.
-            await handleCheckout(response.data.purchaseId);
+            setError(
+                "Your renewal was completed, but the updated membership card link was not returned. Please contact support."
+            );
+
+            console.error("Renewal Response:", response.data);
 
         } catch (err) {
+            console.error("Renewal Error:", err);
+
             setError(
                 err.response?.data?.message ||
                 err.message ||
-                "Unable to create renewal purchase."
+                "Unable to complete membership renewal."
             );
         } finally {
             setLoading(false);
@@ -185,7 +153,7 @@ const Renewal = () => {
                     </div>
                 )}
 
-                {!purchase && !verificationToken && (
+                {!verificationToken && (
                     <form
                         onSubmit={handleSendOTP}
                         className="space-y-5"
@@ -219,7 +187,7 @@ const Renewal = () => {
                     </form>
                 )}
 
-                {!purchase && !verificationToken && success && (
+                {!verificationToken && success && (
                     <form
                         onSubmit={handleVerifyOTP}
                         className="space-y-5 mt-6"
@@ -256,7 +224,7 @@ const Renewal = () => {
                     </form>
                 )}
 
-                {!purchase && verificationToken && (
+                {verificationToken && (
                     <form
                         onSubmit={handleRenewal}
                         className="space-y-6"
@@ -315,88 +283,10 @@ const Renewal = () => {
                             className="w-full bg-[#d4af37] text-black font-bold py-3 rounded-lg hover:bg-[#f0cf64] transition disabled:opacity-50"
                         >
                             {loading
-                                ? "PROCESSING..."
-                                : "CONTINUE TO PAYMENT"}
+                                ? "PROCESSING RENEWAL..."
+                                : "RENEW MEMBERSHIP"}
                         </button>
                     </form>
-                )}
-
-                {purchase && (
-                    <div className="text-center space-y-5">
-
-                        <div className="text-[#d4af37] text-5xl">
-                            ✓
-                        </div>
-
-                        <h2 className="text-2xl font-bold">
-                            RENEWAL REQUEST CREATED
-                        </h2>
-
-                        <div className="bg-black border border-gray-700 rounded-lg p-5 text-left space-y-3">
-
-                            <p>
-                                <span className="text-gray-400">
-                                    Member ID:
-                                </span>{" "}
-                                <span className="text-white font-semibold">
-                                    {purchase.memberId}
-                                </span>
-                            </p>
-
-                            <p>
-                                <span className="text-gray-400">Plan:</span>{" "}
-                                <span className="text-[#d4af37] font-semibold">
-                                    {purchase.plan}
-                                </span>
-                            </p>
-
-                            <p>
-                                <span className="text-gray-400">Amount:</span>{" "}
-                                <span className="text-white font-semibold">
-                                    ${(purchase.amount / 100).toFixed(2)}
-                                </span>
-                            </p>
-
-                            <p>
-                                <span className="text-gray-400">Duration:</span>{" "}
-                                <span className="text-white">
-                                    {purchase.durationMonths} months
-                                </span>
-                            </p>
-
-                            <p>
-                                <span className="text-gray-400">
-                                    Purchase ID:
-                                </span>{" "}
-                                <span className="text-white text-xs break-all">
-                                    {purchase.purchaseId}
-                                </span>
-                            </p>
-
-                            <p>
-                                <span className="text-gray-400">Payment:</span>{" "}
-                                <span className="text-yellow-400">
-                                    Pending
-                                </span>
-                            </p>
-                        </div>
-
-                        <p className="text-gray-400 text-sm">
-                            Your renewal purchase has been saved.
-                            Your existing membership will only be extended
-                            after successful payment confirmation.
-                        </p>
-
-                        <button
-                            type="button"
-                            onClick={() => handleCheckout(purchase.purchaseId)}
-                            disabled={loading}
-                            className="w-full bg-[#d4af37] text-black font-bold py-3 rounded-lg hover:bg-[#f0cf64] transition disabled:opacity-50"
-                        >
-                            {loading ? "PROCESSING..." : "PAY NOW / RETRY PAYMENT"}
-                        </button>
-
-                    </div>
                 )}
 
                 <p className="text-center text-gray-500 text-xs mt-8">

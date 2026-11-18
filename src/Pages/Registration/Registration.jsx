@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -34,7 +33,6 @@ const Registration = () => {
         }));
     }, [selectedPlan]);
 
-    // Handle input changes
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
 
@@ -46,7 +44,6 @@ const Registration = () => {
         setError("");
     };
 
-    // Submit registration and proceed to payment
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -69,24 +66,16 @@ const Registration = () => {
                 formData
             );
 
-            if (response.data.success) {
-                const purchaseId =
-                    response.data.purchaseId ||
-                    response.data.purchase?._id ||
-                    response.data.purchase?.purchaseId;
-
-                if (!purchaseId) {
-                    setError(
-                        "Registration was saved, but the purchase ID was not returned. Please contact support."
-                    );
-                    console.error("Registration Response:", response.data);
-                    return;
-                }
-
-                navigate(
-                    `/payment?purchaseId=${encodeURIComponent(purchaseId)}`
-                );
+            if (response.data.success && response.data.cardUrl) {
+                window.location.assign(response.data.cardUrl);
+                return;
             }
+
+            setError(
+                "Registration was completed, but the membership card link was not returned. Please contact support."
+            );
+
+            console.error("Registration Response:", response.data);
         } catch (error) {
             console.error("Registration Error:", error);
 
@@ -105,9 +94,7 @@ const Registration = () => {
 
     return (
         <div className="min-h-screen bg-[#080808] flex items-center justify-center px-3 sm:px-6 py-10">
-
             <div className="w-full max-w-lg">
-
                 <h2 className="text-center mb-3 text-3xl md:text-4xl font-semibold text-white">
                     Registration
                 </h2>
@@ -117,10 +104,7 @@ const Registration = () => {
                 </p>
 
                 <div className="border border-[#C7A05B]/30 rounded-2xl p-5 sm:p-8 md:p-10 shadow-[0_0_35px_rgba(199,160,91,0.08)]">
-
                     <form onSubmit={handleSubmit} className="space-y-5">
-
-                        {/* Full Name */}
                         <div>
                             <label className="block text-white text-sm font-medium mb-2">
                                 Full Name
@@ -138,7 +122,6 @@ const Registration = () => {
                             />
                         </div>
 
-                        {/* Email */}
                         <div>
                             <label className="block text-white text-sm font-medium mb-2">
                                 Email Address
@@ -156,7 +139,6 @@ const Registration = () => {
                             />
                         </div>
 
-                        {/* Phone */}
                         <div>
                             <label className="block text-white text-sm font-medium mb-2">
                                 Phone Number
@@ -174,7 +156,6 @@ const Registration = () => {
                             />
                         </div>
 
-                        {/* Date of Birth */}
                         <div>
                             <label className="block text-white text-sm font-medium mb-2">
                                 Date of Birth
@@ -192,7 +173,6 @@ const Registration = () => {
                             />
                         </div>
 
-                        {/* Membership */}
                         <div>
                             <label className="block text-white text-sm font-medium mb-2">
                                 Select Membership
@@ -215,7 +195,6 @@ const Registration = () => {
                             </select>
                         </div>
 
-                        {/* Terms */}
                         <div className="flex items-start gap-3">
                             <input
                                 type="checkbox"
@@ -244,29 +223,27 @@ const Registration = () => {
                             </label>
                         </div>
 
-                        {/* Error */}
                         {error && (
                             <p className="text-red-400 text-sm text-center">
                                 {error}
                             </p>
                         )}
 
-                        {/* Submit */}
                         <button
                             type="submit"
                             disabled={loading}
                             className="w-full py-3 rounded-lg font-bold text-black bg-[linear-gradient(90deg,#BF953F_0%,#FCF6BA_25%,#B38728_50%,#FBF5B7_75%,#AA771C_100%)] hover:brightness-110 active:scale-[0.98] transition duration-300 shadow-lg shadow-[#C7A05B]/10 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {loading ? "Processing..." : "Proceed to Pay"}
+                            {loading
+                                ? "Completing Registration..."
+                                : "Complete Registration"}
                         </button>
-
                     </form>
                 </div>
 
                 <p className="text-center text-white/40 text-xs mt-6">
                     DA WEB SOCIAL CLUB
                 </p>
-
             </div>
         </div>
     );

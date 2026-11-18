@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
@@ -73,8 +72,7 @@ const AdminMemberDetails = () => {
             member.status === "suspended" ? "active" : "suspended";
 
         const confirmed = window.confirm(
-            `Are you sure you want to ${
-                newStatus === "suspended" ? "suspend" : "reactivate"
+            `Are you sure you want to ${newStatus === "suspended" ? "suspend" : "reactivate"
             } this member?`
         );
 
@@ -228,11 +226,10 @@ const AdminMemberDetails = () => {
                         type="button"
                         disabled={updating}
                         onClick={handleStatusChange}
-                        className={`rounded-lg px-6 py-3 text-sm font-semibold transition disabled:opacity-50 ${
-                            member.status === "suspended"
+                        className={`rounded-lg px-6 py-3 text-sm font-semibold transition disabled:opacity-50 ${member.status === "suspended"
                                 ? "border border-green-500/40 text-green-400 hover:bg-green-500/10"
                                 : "border border-red-500/40 text-red-400 hover:bg-red-500/10"
-                        }`}
+                            }`}
                     >
                         {updating
                             ? "Updating..."

@@ -1,4 +1,3 @@
-
 import logo from '/logo.jpeg';
 
 const Banner = () => {

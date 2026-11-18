@@ -1,15 +1,11 @@
-
-
 const About = () => {
     return (
         <div className='mt-5 min-h-screen'>
             <h2
-                            className="my-2 relative mx-auto w-fit text-3xl md:text-4xl font-semibold text-white 
-            after:absolute after:-bottom-3 after:left-0 after:h-[2px] after:w-full
-            after:bg-gradient-to-r after:from-[#BF953F] after:via-[#FCF6BA] after:to-[#AA771C] after:content-['']"
-                        >
-                            About Us
-                        </h2>
+                className="my-2 text-2xl md:text-3xl font-semibold text-center"
+            >
+                About Us
+            </h2>
 
             <div>
                 <div className="hero">
